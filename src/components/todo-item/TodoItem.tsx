@@ -8,7 +8,7 @@ type ITaskItem = {
 };
 export const TodoItem = ({ todo }: ITaskItem) => {
   const { handleUpdate } = useUpdateStatusTodo();
-  const { pickTodo } = useTodos();
+  const { pickTodo, currentTodo } = useTodos();
   const { handleDeleteTodo } = useDeleteTodo();
   const { title, description, dueDate, completed } = todo;
   return (
@@ -17,6 +17,7 @@ export const TodoItem = ({ todo }: ITaskItem) => {
         <div className="flex gap-1">
           <input
             type="checkbox"
+            disabled={currentTodo && currentTodo.id === todo.id ? true : false}
             onChange={(event) => {
               const completed = event.target.checked;
               const todoUpdate = { ...todo, completed };
@@ -44,12 +45,14 @@ export const TodoItem = ({ todo }: ITaskItem) => {
         <button
           className="bg-blue-300 text-white px-2 py-1 rounded mt-2"
           onClick={() => pickTodo(todo)}
+          disabled={currentTodo && currentTodo.id === todo.id ? true : false}
         >
           Update
         </button>
         <button
           className="bg-red-500 text-white px-2 py-1 rounded mt-2"
           onClick={() => handleDeleteTodo(todo.id)}
+          disabled={currentTodo && currentTodo.id === todo.id ? true : false}
         >
           Delete
         </button>

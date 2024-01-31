@@ -5,6 +5,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { FormTodo } from "../../interfaces";
 import DatePicker from "react-datepicker";
+import { useEffect } from "react";
+import { useEditTodo } from "../../hooks/useEditTodo";
 const validationSchema = Yup.object().shape({
   title: Yup.string()
     .required("Title is required")
@@ -15,20 +17,35 @@ const validationSchema = Yup.object().shape({
 });
 const CreateTodo = () => {
   const { handleCreateTodo } = useAddTodo();
-  const { currentTodo } = useTodos();
+  const { handleEditTodo } = useEditTodo();
+  const { currentTodo, cancelUpdate } = useTodos();
+  const isEditing = Boolean(currentTodo);
   const {
     register,
     handleSubmit,
     reset,
     control,
     formState: { errors },
+    setValue,
   } = useForm<FormTodo>({
     resolver: yupResolver(validationSchema),
-    // defaultValues: currentTodo ? currentTodo : {},
   });
-  console.log({ currentTodo });
+  useEffect(() => {
+    if (!currentTodo) return;
+    const { title, description, dueDate } = currentTodo;
+    setValue("title", title);
+    setValue("description", description);
+    dueDate && setValue("dueDate", new Date(dueDate));
+  }, [currentTodo, setValue]);
   const onSubmit = (data: FormTodo) => {
-    handleCreateTodo(data);
+    if (isEditing && currentTodo) {
+      const { completed, createdAt } = currentTodo;
+      handleEditTodo(currentTodo.id, {
+        completed,
+        createdAt,
+        ...data,
+      });
+    } else handleCreateTodo(data);
     reset();
   };
   return (
@@ -86,11 +103,19 @@ const CreateTodo = () => {
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           type="submit"
         >
-          Add Todo
+          {isEditing ? "Update todo" : "Add Todo"}
         </button>
-        <button className="px-4 py-2 bg-gray-400 text-white rounded">
-          Cancel Update
-        </button>
+        {isEditing && (
+          <button
+            className="px-4 py-2 bg-gray-400 text-white rounded"
+            onClick={() => {
+              cancelUpdate();
+              reset();
+            }}
+          >
+            Cancel Update
+          </button>
+        )}
       </div>
     </form>
   );

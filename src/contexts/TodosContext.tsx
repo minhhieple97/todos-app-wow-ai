@@ -12,6 +12,7 @@ const initialState: TodoContextType = {
   deleteTodo: () => {},
   filterTodo: () => {},
   pickTodo: () => {},
+  cancelUpdate: () => {},
   isLoading: false,
   currentTodo: null,
   error: null,
@@ -28,7 +29,9 @@ const reducer = (state: TodoContextType, action: TodoAction) => {
     case ActionType.PICK_TODO:
       return { ...state, currentTodo: action.payload };
     case ActionType.REJECTED:
-      return state;
+      return { ...state, error: action.payload };
+    case ActionType.CANCEL_UPDATE:
+      return { ...state, currentTodo: null };
     default:
       throw new Error("Unknown action type");
   }
@@ -62,34 +65,38 @@ const TodosProvider: React.FC<{ children: React.ReactNode }> = ({
     [todos]
   );
 
-  async function addTodo(todo: Todo) {
+  function addTodo(todo: Todo) {
     const newTodos = structuredClone(todos);
     newTodos.push(todo);
     setTodos(newTodos);
   }
 
-  async function pickTodo(todo: Todo) {
+  function pickTodo(todo: Todo) {
     dispatch({
       type: ActionType.PICK_TODO,
       payload: todo,
     });
   }
 
-  async function deleteTodo(id: number) {
+  function deleteTodo(id: number) {
     const newTodos = structuredClone(todos).filter((todo) => todo.id !== id);
     setTodos(newTodos);
   }
 
-  async function editTodo(todo: Todo) {
+  function editTodo(todo: Todo) {
     const id = todo.id;
     const newTodos = structuredClone(todos);
     const indexTodo = newTodos.findIndex((todo) => todo.id === id);
-    newTodos[indexTodo] = { ...todo, updatedAt: Date.now() };
+    newTodos[indexTodo] = todo;
     setTodos(newTodos);
+    dispatch({ type: ActionType.CANCEL_UPDATE });
   }
 
-  async function filterTodo(status: FILTER_STATUS_TODO_VALUE) {
+  function filterTodo(status: FILTER_STATUS_TODO_VALUE) {
     dispatch({ type: ActionType.FILTER_TODO, payload: status });
+  }
+  function cancelUpdate() {
+    dispatch({ type: ActionType.CANCEL_UPDATE });
   }
 
   return (
@@ -104,6 +111,7 @@ const TodosProvider: React.FC<{ children: React.ReactNode }> = ({
         editTodo,
         filterTodo,
         pickTodo,
+        cancelUpdate,
         statusFilter,
       }}
     >

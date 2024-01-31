@@ -12,7 +12,7 @@ export const useEditTodo = () => {
       createdAt,
       updatedAt: Date.now(),
     };
-    if (dueDate) updateTodo.dueDate = dueDate.toString();
+    if (dueDate) updateTodo.dueDate = dueDate.toISOString();
     editTodo(updateTodo);
   };
   return {

@@ -11,7 +11,7 @@ export const useAddTodo = () => {
       completed: false,
       createdAt: Date.now(),
     };
-    if (dueDate) todo.dueDate = dueDate.toString();
+    if (dueDate) todo.dueDate = dueDate.toISOString();
     addTodo(todo);
   };
   return {
