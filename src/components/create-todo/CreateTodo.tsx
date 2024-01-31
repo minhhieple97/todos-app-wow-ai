@@ -1,5 +1,5 @@
 import Message from "../../ui/Message";
-import { useAddTodo } from "../../hooks";
+import { useAddTodo, useTodos } from "../../hooks";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -13,8 +13,9 @@ const validationSchema = Yup.object().shape({
   description: Yup.string(),
   dueDate: Yup.date(),
 });
-const CreateTask = () => {
+const CreateTodo = () => {
   const { handleCreateTodo } = useAddTodo();
+  const { currentTodo } = useTodos();
   const {
     register,
     handleSubmit,
@@ -23,13 +24,15 @@ const CreateTask = () => {
     formState: { errors },
   } = useForm<FormTodo>({
     resolver: yupResolver(validationSchema),
+    // defaultValues: currentTodo ? currentTodo : {},
   });
+  console.log({ currentTodo });
   const onSubmit = (data: FormTodo) => {
     handleCreateTodo(data);
     reset();
   };
   return (
-    <form className="mb-4" onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-2">
         <label className="block mb-1 font-bold" htmlFor="title">
           Title
@@ -78,15 +81,19 @@ const CreateTask = () => {
           )}
         />
       </div>
-
-      <button
-        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        type="submit"
-      >
-        Add Task
-      </button>
+      <div className="flex justify-between">
+        <button
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          type="submit"
+        >
+          Add Todo
+        </button>
+        <button className="px-4 py-2 bg-gray-400 text-white rounded">
+          Cancel Update
+        </button>
+      </div>
     </form>
   );
 };
 
-export { CreateTask };
+export { CreateTodo };

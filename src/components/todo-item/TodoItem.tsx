@@ -1,11 +1,15 @@
-import { useUpdateTodo } from "../../hooks/useTaskList";
+import { useTodos } from "../../hooks";
+import { useDeleteTodo } from "../../hooks/useDeleteTodo";
+import { useUpdateStatusTodo } from "../../hooks/useUpdateStatusTodo";
 import { Todo } from "../../interfaces";
 import { formatDate } from "../../utils/helpers";
 type ITaskItem = {
   todo: Todo;
 };
 export const TodoItem = ({ todo }: ITaskItem) => {
-  const { handleUpdate } = useUpdateTodo();
+  const { handleUpdate } = useUpdateStatusTodo();
+  const { pickTodo } = useTodos();
+  const { handleDeleteTodo } = useDeleteTodo();
   const { title, description, dueDate, completed } = todo;
   return (
     <div className="mb-2 bg-white rounded p-2 shadow">
@@ -36,9 +40,20 @@ export const TodoItem = ({ todo }: ITaskItem) => {
       ) : (
         <p className="text-sm text-gray-500">No due date</p>
       )}
-      <button className="bg-red-500 text-white px-2 py-1 rounded mt-2">
-        Delete
-      </button>
+      <div className="flex gap-2">
+        <button
+          className="bg-blue-300 text-white px-2 py-1 rounded mt-2"
+          onClick={() => pickTodo(todo)}
+        >
+          Update
+        </button>
+        <button
+          className="bg-red-500 text-white px-2 py-1 rounded mt-2"
+          onClick={() => handleDeleteTodo(todo.id)}
+        >
+          Delete
+        </button>
+      </div>
     </div>
   );
 };

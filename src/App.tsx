@@ -1,25 +1,21 @@
-import { CreateTask } from "./components/create-task";
+import { CreateTodo } from "./components/create-todo";
 import { TaskFilter } from "./components/task-filter";
-import { TaskList } from "./components/task-list";
-import { useTodos } from "./hooks/useTodos";
-
+import { TodoList } from "./components/todo-list";
 export default function App() {
-  const { todos } = useTodos();
   return (
-    <div className="container mx-auto p-4 flex flex-col gap-5 items-center">
-      <h1 className="text-2xl font-bold m-auto">To-Do App</h1>
-      <div className="min-w-96">
-        <CreateTask></CreateTask>
-      </div>
-
-      <div className="min-w-[80%]">
-        {todos.length > 0 && (
+    <div className="w-full p-6 flex flex-col gap-5">
+      <h1 className="text-2xl font-bold m-auto inline-block">To-Do App</h1>
+      <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="p-5 max-w-3xl">
+          <CreateTodo></CreateTodo>
+        </div>
+        <div className="p-2">
           <div className="flex items-center mb-2">
             <h2 className="text-xl font-bold mr-2">Tasks</h2>
             <TaskFilter></TaskFilter>
           </div>
-        )}
-        <TaskList></TaskList>
+          <TodoList></TodoList>
+        </div>
       </div>
     </div>
   );

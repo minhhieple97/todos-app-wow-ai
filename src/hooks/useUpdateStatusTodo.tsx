@@ -1,8 +1,8 @@
 import { useTodos } from ".";
 import { Todo } from "../interfaces";
 
-export const useUpdateTodo = () => {
-  const { todos, filterTodo, editTodo } = useTodos();
+export const useUpdateStatusTodo = () => {
+  const { todos, editTodo, statusFilter } = useTodos();
   const pendingTodos = todos.filter((todo) => !todo.completed);
   const completedTodos = todos.filter((todo) => todo.completed);
   const handleUpdate = (todo: Todo) => {
@@ -12,5 +12,6 @@ export const useUpdateTodo = () => {
     handleUpdate,
     pendingTodos,
     completedTodos,
+    statusFilter,
   };
 };

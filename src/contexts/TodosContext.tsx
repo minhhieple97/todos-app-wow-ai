@@ -11,6 +11,7 @@ const initialState: TodoContextType = {
   editTodo: () => {},
   deleteTodo: () => {},
   filterTodo: () => {},
+  pickTodo: () => {},
   isLoading: false,
   currentTodo: null,
   error: null,
@@ -22,13 +23,10 @@ const reducer = (state: TodoContextType, action: TodoAction) => {
   switch (action.type) {
     case ActionType.LOADED_TODOS:
       return { ...state, isLoading: false, todos: action.payload };
-    case ActionType.ADD_TODO:
-      return { ...state, todos: action.payload };
     case ActionType.FILTER_TODO:
       return { ...state, statusFilter: action.payload };
-    case ActionType.EDIT_TODO:
-      return { ...state, todos: action.payload };
-    case ActionType.DELETE_TODO:
+    case ActionType.PICK_TODO:
+      return { ...state, currentTodo: action.payload };
     case ActionType.REJECTED:
       return state;
     default:
@@ -68,10 +66,19 @@ const TodosProvider: React.FC<{ children: React.ReactNode }> = ({
     const newTodos = structuredClone(todos);
     newTodos.push(todo);
     setTodos(newTodos);
-    dispatch({ type: ActionType.ADD_TODO, payload: newTodos });
   }
 
-  async function deleteTodo(id: number) {}
+  async function pickTodo(todo: Todo) {
+    dispatch({
+      type: ActionType.PICK_TODO,
+      payload: todo,
+    });
+  }
+
+  async function deleteTodo(id: number) {
+    const newTodos = structuredClone(todos).filter((todo) => todo.id !== id);
+    setTodos(newTodos);
+  }
 
   async function editTodo(todo: Todo) {
     const id = todo.id;
@@ -79,7 +86,6 @@ const TodosProvider: React.FC<{ children: React.ReactNode }> = ({
     const indexTodo = newTodos.findIndex((todo) => todo.id === id);
     newTodos[indexTodo] = { ...todo, updatedAt: Date.now() };
     setTodos(newTodos);
-    dispatch({ type: ActionType.EDIT_TODO, payload: newTodos });
   }
 
   async function filterTodo(status: FILTER_STATUS_TODO_VALUE) {
@@ -97,6 +103,7 @@ const TodosProvider: React.FC<{ children: React.ReactNode }> = ({
         deleteTodo,
         editTodo,
         filterTodo,
+        pickTodo,
         statusFilter,
       }}
     >
