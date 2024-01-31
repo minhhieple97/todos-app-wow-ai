@@ -1,1 +1,1 @@
-export * from './task-input'
+export * from './TaskInput'

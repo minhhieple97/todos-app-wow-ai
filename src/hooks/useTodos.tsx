@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import { TodosContext } from "../contexts/todo-context";
+import { TodosContext } from "../contexts/TodosContext";
 
-function useTodos() {
+const useTodos = () => {
   const context = useContext(TodosContext);
   if (context === undefined)
     throw new Error("TodosContext was used outside the TodosProvider");
