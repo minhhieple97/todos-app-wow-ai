@@ -1,7 +1,7 @@
 import { useTodos } from "../../hooks";
 import { FILTER_STATUS_TODO_VALUE } from "../../utils/constants";
 
-export const TaskFilter = () => {
+export const TodoFilter = () => {
   const { filterTodo } = useTodos();
   const allStatus = Object.values(FILTER_STATUS_TODO_VALUE);
   return (

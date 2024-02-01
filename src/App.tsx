@@ -1,5 +1,5 @@
 import { CreateTodo } from "./components/create-todo";
-import { TaskFilter } from "./components/task-filter";
+import { TodoFilter } from "./components/todo-filter";
 import { TodoList } from "./components/todo-list";
 export default function App() {
   return (
@@ -12,7 +12,7 @@ export default function App() {
         <div className="p-2">
           <div className="flex items-center mb-2">
             <h2 className="text-xl font-bold mr-2">Tasks</h2>
-            <TaskFilter></TaskFilter>
+            <TodoFilter></TodoFilter>
           </div>
           <TodoList></TodoList>
         </div>
