@@ -1,49 +1,42 @@
-To set up and run the Todo List application locally, follow the steps below:
+# Todo List Application
 
-Step 1: Clone the Repository
+This is a simple Todo List application developed for the ability test of Wow AI company. The application allows users to add, edit, and delete tasks. Users can also mark tasks as completed or pending. The application features form validation, task filtering, and local persistence of tasks.
 
-1. Open a terminal or command prompt.
+## Features
 
-2. Navigate to the directory where you want to clone the repository.
+- Clean and intuitive user interface.
+- Ability to add a new task with a title and description.
+- Ability to edit the title and description of an existing task.
+- Ability to mark a task as completed or pending.
+- Ability to delete a task.
+- Form validation to ensure required fields are filled out correctly.
+- Display a list of tasks with the ability to filter tasks based on completion status.
+- Persistence of tasks locally to prevent data loss upon page refresh.
+- Drag-and-drop functionality to allow users to reorder tasks.
+- Ability to set a due date for tasks using a date picker.
 
-3. Run the following command to clone the repository:
+## Live Demo
 
-   ```
-   git clone https://github.com/minhhieple97/todos-app-wow-ai
-   ```
+You can try out the live demo of the Todo List application [here](link-to-live-demo).
 
-4. Once the repository is cloned, navigate to the project directory:
-   ```
-   cd todos-app-wow-ai
-   ```
+Please note that this is a simplified implementation to showcase the core features. Feel free to explore the code and make any modifications or enhancements as needed.
 
-Step 2: Install Dependencies
+## Installation and Usage
 
-1. Make sure you have Node.js installed on your system. You can download it from the official website: https://nodejs.org/
+1. Clone the repository.
+2. Navigate to the project directory.
+3. Run `npm install` to install the dependencies.
+4. Run `npm run dev` to start the development server.
+5. Open your browser and visit `http://localhost:5173/` to access the application.
 
-2. In the project directory, run the following command to install the project dependencies:
-   ```
-   npm install
-   ```
+## Technology Stack
 
-Step 3: Start the Development Server
+- ReactJS
+- HTML/CSS
+- Typescript
+- Tailwind CSS
+- React-beautiful-dnd
 
-1. After the dependencies are installed, run the following command to start the development server:
+## Contributing
 
-   ```
-   npm run dev
-   ```
-
-2. Open your web browser and navigate to `http://localhost:3000` to see the Todo List application in action.
-
-Step 4: Interacting with the Application
-
-1. The Todo List application allows you to add, edit, and delete tasks.
-
-2. To add a new task, enter a title and description in the respective input fields and click the "Add Todo" button.
-
-3. To edit a task, click the "Edit" button next to the task you want to edit. Implement the edit functionality in the `editTodo` function in the `App` component.
-
-4. To mark a task as completed or pending, click the checkbox next to the task title. The task will be crossed out if it is completed.
-
-5. To delete a task, click the "Delete" button next to the task.
+Contributions are welcome! If you have any suggestions, improvements, or bug fixes, please feel free to submit a pull request.
