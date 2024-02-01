@@ -17,11 +17,13 @@ This is a simple Todo List application developed for the ability test of Wow AI 
 
 ## Live Demo
 
-You can try out the live demo of the Todo List application [here](link-to-live-demo).
+You can try out the live demo of the Todo List application [here](https://todos-app-wow-ai.vercel.app/).
 
 Please note that this is a simplified implementation to showcase the core features. Feel free to explore the code and make any modifications or enhancements as needed.
 
 ## Installation and Usage
+
+Make sure you have Node.js installed on your machine before running the application.
 
 1. Clone the repository.
 2. Navigate to the project directory.
