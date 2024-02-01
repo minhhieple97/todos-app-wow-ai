@@ -4,6 +4,7 @@ import { useDeleteTodo } from "../../hooks/useDeleteTodo";
 import { Todo } from "../../interfaces";
 import { formatDate } from "../../utils/helpers";
 import { FILTER_STATUS_TODO_VALUE } from "../../utils/constants";
+import { Button } from "../../ui";
 type ITaskItem = {
   todo: Todo;
   index: number;
@@ -63,25 +64,29 @@ export const TodoItem = ({ todo, index }: ITaskItem) => {
             ) : (
               <p className="text-sm text-gray-500">No due date</p>
             )}
-            <div className="flex gap-2">
-              <button
-                className="bg-blue-300 text-white px-2 py-1 rounded mt-2"
-                onClick={() => pickTodo(todo)}
+            <div className="flex gap-2 mt-2">
+              <Button
+                size="sm"
+                textColor="white"
+                bgColor="blue-300"
+                handleClick={() => pickTodo(todo)}
                 disabled={
                   currentTodo && currentTodo.id === todo.id ? true : false
                 }
               >
                 Update
-              </button>
-              <button
-                className="bg-red-500 text-white px-2 py-1 rounded mt-2"
-                onClick={() => handleDeleteTodo(todo.id, todo.status)}
+              </Button>
+              <Button
+                size="sm"
+                textColor="white"
+                bgColor="red-500"
+                handleClick={() => handleDeleteTodo(todo.id, todo.status)}
                 disabled={
                   currentTodo && currentTodo.id === todo.id ? true : false
                 }
               >
                 Delete
-              </button>
+              </Button>
             </div>
           </div>
         );

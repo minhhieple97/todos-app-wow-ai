@@ -7,6 +7,7 @@ import { FormTodo } from "../../interfaces";
 import DatePicker from "react-datepicker";
 import { useEffect } from "react";
 import { useEditTodo } from "../../hooks/useEditTodo";
+import { Button, Label } from "../../ui";
 const validationSchema = Yup.object().shape({
   title: Yup.string()
     .required("Title is required")
@@ -51,9 +52,7 @@ const CreateTodo = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-2">
-        <label className="block mb-1 font-bold" htmlFor="title">
-          Title
-        </label>
+        <Label htmlFor="title">Title</Label>
         <input
           className="w-full px-2 py-1 mb-1.5 border border-gray-300 rounded"
           type="text"
@@ -66,9 +65,7 @@ const CreateTodo = () => {
       </div>
 
       <div className="mb-2">
-        <label className="block mb-1 font-bold" htmlFor="description">
-          Description
-        </label>
+        <Label htmlFor="description">Description</Label>
         <textarea
           className="w-full px-2 py-1 border border-gray-300 rounded"
           id="description"
@@ -77,9 +74,7 @@ const CreateTodo = () => {
       </div>
 
       <div className="mb-2">
-        <label className="block mb-1 font-bold" htmlFor="dueDate">
-          Due Date
-        </label>
+        <Label htmlFor="dueDate">Due Date</Label>
         <Controller
           control={control}
           name="dueDate"
@@ -99,22 +94,21 @@ const CreateTodo = () => {
         />
       </div>
       <div className="flex justify-between">
-        <button
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          type="submit"
-        >
+        <Button size="lg" textColor="white" bgColor="blue-500" type="submit">
           {isEditing ? "Update todo" : "Add Todo"}
-        </button>
+        </Button>
         {isEditing && (
-          <button
-            className="px-4 py-2 bg-gray-400 text-white rounded"
-            onClick={() => {
+          <Button
+            size="lg"
+            textColor="white"
+            bgColor="gray-400"
+            handleClick={() => {
               cancelUpdate();
               reset();
             }}
           >
             Cancel Update
-          </button>
+          </Button>
         )}
       </div>
     </form>
