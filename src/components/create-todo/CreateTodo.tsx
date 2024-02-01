@@ -39,9 +39,9 @@ const CreateTodo = () => {
   }, [currentTodo, setValue]);
   const onSubmit = (data: FormTodo) => {
     if (isEditing && currentTodo) {
-      const { completed, createdAt } = currentTodo;
+      const { status, createdAt } = currentTodo;
       handleEditTodo(currentTodo.id, {
-        completed,
+        status,
         createdAt,
         ...data,
       });

@@ -1,39 +1,45 @@
-import { useUpdateStatusTodo } from "../../hooks/useUpdateStatusTodo";
-import { FILTER_STATUS_TODO_VALUE } from "../../utils/constants";
+import { useDragDrop, useTodos } from "../../hooks";
 import { TodoItem } from "../todo-item";
-
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 export const TodoList = () => {
-  const { completedTodos, pendingTodos, statusFilter } = useUpdateStatusTodo();
+  const { columns } = useTodos();
+  const { handleDrapDrop } = useDragDrop();
   return (
-    <div className="flex flex-col gap-2">
-      {statusFilter === FILTER_STATUS_TODO_VALUE.COMPLETED ? null : (
-        <div className="bg-gray-400 p-4 rounded overflow-y-scroll max-h-96 no-scrollbar">
-          <h2 className="text-xl font-bold mb-2">Pending Tasks</h2>
-          {pendingTodos.length === 0 ? (
-            <p>No pending tasks.</p>
-          ) : (
-            <>
-              {pendingTodos.map((todo) => (
-                <TodoItem key={todo.id} todo={todo}></TodoItem>
-              ))}
-            </>
-          )}
-        </div>
-      )}
-      {statusFilter === FILTER_STATUS_TODO_VALUE.PENDING ? null : (
-        <div className="bg-green-500 p-4 rounded overflow-y-scroll max-h-96 no-scrollbar">
-          <h2 className="text-xl font-bold mb-2">Completed Tasks</h2>
-          {completedTodos.length === 0 ? (
-            <p>No completed tasks.</p>
-          ) : (
-            <>
-              {completedTodos.map((todo) => (
-                <TodoItem key={todo.id} todo={todo}></TodoItem>
-              ))}
-            </>
-          )}
-        </div>
-      )}
-    </div>
+    <DragDropContext onDragEnd={handleDrapDrop}>
+      <div className="flex flex-col gap-2">
+        {columns.map((column) => {
+          return (
+            <div
+              key={column.id}
+              className={`${column.backgroundColor} p-4 rounded overflow-y-scroll max-h-screen no-scrollbar`}
+            >
+              <h2 className="text-xl font-bold mb-2">{column.title}</h2>
+              <Droppable droppableId={column.id} type="group">
+                {(provided) => {
+                  return (
+                    <div {...provided.droppableProps} ref={provided.innerRef}>
+                      {column.list.length === 0 ? (
+                        <p>{column.notFoundMessage}</p>
+                      ) : (
+                        <>
+                          {column.list.map((todo, index) => (
+                            <TodoItem
+                              key={todo.id}
+                              todo={todo}
+                              index={index}
+                            ></TodoItem>
+                          ))}
+                        </>
+                      )}
+                      {provided.placeholder}
+                    </div>
+                  );
+                }}
+              </Droppable>
+            </div>
+          );
+        })}
+      </div>
+    </DragDropContext>
   );
 };

@@ -1,5 +1,6 @@
 import { useTodos } from "./useTodos";
 import { FormTodo, Todo } from "../interfaces";
+import { FILTER_STATUS_TODO_VALUE } from "../utils/constants";
 export const useAddTodo = () => {
   const { addTodo } = useTodos();
   const handleCreateTodo = (formTodo: FormTodo) => {
@@ -8,7 +9,7 @@ export const useAddTodo = () => {
       title,
       description,
       id: Date.now(),
-      completed: false,
+      status: FILTER_STATUS_TODO_VALUE.PENDING,
       createdAt: Date.now(),
     };
     if (dueDate) todo.dueDate = dueDate.toISOString();

@@ -1,11 +1,21 @@
-import React, { createContext, useEffect, useReducer } from "react";
-import { ActionType, Todo, TodoAction, TodoContextType } from "../interfaces";
+import React, { createContext, useEffect, useReducer, useState } from "react";
+import {
+  ActionType,
+  ColumnsData,
+  ExcludeAll,
+  State,
+  Todo,
+  TodoAction,
+  TodoContextType,
+} from "../interfaces";
 import {
   FILTER_STATUS_TODO_VALUE,
   LOCALSTORATE_KEY_TODOS,
+  initialColumnsData,
 } from "../utils/constants";
 import { useLocalStorageState } from "../hooks";
-const initialState: TodoContextType = {
+import { getColumnsByStatus } from "../utils/helpers";
+const initialValue: TodoContextType = {
   todos: [],
   addTodo: () => {},
   editTodo: () => {},
@@ -13,23 +23,18 @@ const initialState: TodoContextType = {
   filterTodo: () => {},
   pickTodo: () => {},
   cancelUpdate: () => {},
-  isLoading: false,
   currentTodo: null,
-  error: null,
   statusFilter: FILTER_STATUS_TODO_VALUE.ALL,
+  columns: [],
 };
-const TodosContext = createContext<TodoContextType>(initialState);
+const TodosContext = createContext<TodoContextType>(initialValue);
 
-const reducer = (state: TodoContextType, action: TodoAction) => {
+const reducer = (state: State, action: TodoAction) => {
   switch (action.type) {
-    case ActionType.LOADED_TODOS:
-      return { ...state, isLoading: false, todos: action.payload };
     case ActionType.FILTER_TODO:
       return { ...state, statusFilter: action.payload };
     case ActionType.PICK_TODO:
       return { ...state, currentTodo: action.payload };
-    case ActionType.REJECTED:
-      return { ...state, error: action.payload };
     case ActionType.CANCEL_UPDATE:
       return { ...state, currentTodo: null };
     default:
@@ -44,68 +49,67 @@ const TodosProvider: React.FC<{ children: React.ReactNode }> = ({
     LOCALSTORATE_KEY_TODOS,
     []
   );
-  const [{ isLoading, currentTodo, error, statusFilter }, dispatch] =
-    useReducer(reducer, initialState);
-  useEffect(
-    function () {
-      todos.sort((a, b) => {
-        if (a.updatedAt !== undefined && b.updatedAt !== undefined) {
-          if (a.updatedAt === b.updatedAt) {
-            return b.createdAt - a.createdAt;
-          }
-          return b.updatedAt - a.updatedAt;
-        }
-        return b.createdAt - a.createdAt;
-      });
-      dispatch({
-        type: ActionType.LOADED_TODOS,
-        payload: todos,
-      });
-    },
-    [todos]
+
+  const [columnsData, setColumnsData] =
+    useState<ColumnsData>(initialColumnsData);
+
+  const [{ currentTodo, statusFilter }, dispatch] = useReducer(
+    reducer,
+    initialValue
   );
 
-  function addTodo(todo: Todo) {
+  useEffect(() => {
+    setColumnsData((columnsData) => {
+      const newColumsData = structuredClone(columnsData);
+      const keys = Object.keys(
+        newColumsData
+      ) as ExcludeAll<FILTER_STATUS_TODO_VALUE>[];
+      for (const key of keys) {
+        newColumsData[key].list = todos.filter((todo) => todo.status === key);
+      }
+      return newColumsData;
+    });
+  }, [todos]);
+
+  const addTodo = (todo: Todo) => {
     const newTodos = structuredClone(todos);
     newTodos.push(todo);
     setTodos(newTodos);
-  }
+  };
 
-  function pickTodo(todo: Todo) {
+  const pickTodo = (todo: Todo) => {
     dispatch({
       type: ActionType.PICK_TODO,
       payload: todo,
     });
-  }
+  };
 
-  function deleteTodo(id: number) {
+  const deleteTodo = (id: number) => {
     const newTodos = structuredClone(todos).filter((todo) => todo.id !== id);
     setTodos(newTodos);
-  }
+  };
 
-  function editTodo(todo: Todo) {
+  const editTodo = (todo: Todo) => {
     const id = todo.id;
     const newTodos = structuredClone(todos);
     const indexTodo = newTodos.findIndex((todo) => todo.id === id);
     newTodos[indexTodo] = todo;
     setTodos(newTodos);
     dispatch({ type: ActionType.CANCEL_UPDATE });
-  }
+  };
 
-  function filterTodo(status: FILTER_STATUS_TODO_VALUE) {
+  const filterTodo = (status: FILTER_STATUS_TODO_VALUE) => {
     dispatch({ type: ActionType.FILTER_TODO, payload: status });
-  }
-  function cancelUpdate() {
+  };
+  const cancelUpdate = () => {
     dispatch({ type: ActionType.CANCEL_UPDATE });
-  }
-
+  };
+  const columns = getColumnsByStatus(statusFilter, columnsData);
   return (
     <TodosContext.Provider
       value={{
         todos,
-        isLoading,
         currentTodo,
-        error,
         addTodo,
         deleteTodo,
         editTodo,
@@ -113,6 +117,7 @@ const TodosProvider: React.FC<{ children: React.ReactNode }> = ({
         pickTodo,
         cancelUpdate,
         statusFilter,
+        columns,
       }}
     >
       {children}

@@ -4,11 +4,28 @@ export interface Todo {
   id: number;
   title: string;
   description?: string;
-  completed: boolean;
+  status: ExcludeAll<FILTER_STATUS_TODO_VALUE>;
   dueDate?: string;
   createdAt: number;
   updatedAt?: number;
 }
+
+export interface Column {
+  id: FILTER_STATUS_TODO_VALUE,
+  title: string;
+  notFoundMessage: string;
+  list: Todo[];
+  backgroundColor: string;
+}
+
+export type ExcludeAll<T> = T extends "all" ? never : T;
+
+type ColumnsDataBase = {
+  [key in ExcludeAll<FILTER_STATUS_TODO_VALUE>]: Column;
+};
+
+export interface ColumnsData extends ColumnsDataBase {}
+
 
 export interface TodoState {
   todos: Todo[];
@@ -24,12 +41,16 @@ export enum ActionType {
 
 export type TodoAction =
   | { type: ActionType.FILTER_TODO; payload: FILTER_STATUS_TODO_VALUE }
-  | { type: ActionType.LOADED_TODOS; payload: Todo[] }
   | { type: ActionType.PICK_TODO; payload: Todo }
-  | { type: ActionType.REJECTED; payload: string }
   | { type: ActionType.CANCEL_UPDATE; };
 
-export type TodoContextType = {
+export type State = {
+  currentTodo: Todo | null;
+  statusFilter: FILTER_STATUS_TODO_VALUE;
+};
+
+
+export type TodoContextType = State & {
   todos: Todo[];
   addTodo: (todo: Todo) => void;
   editTodo: (todo: Todo) => void;
@@ -37,10 +58,7 @@ export type TodoContextType = {
   deleteTodo: (id: number) => void;
   cancelUpdate: () => void;
   filterTodo: (status: FILTER_STATUS_TODO_VALUE) => void;
-  isLoading: boolean;
-  currentTodo: Todo | null;
-  error: string | null;
-  statusFilter: FILTER_STATUS_TODO_VALUE;
+  columns:Column[]
 };
 
 export type FormTodo = {
@@ -50,6 +68,6 @@ export type FormTodo = {
 };
 
 export type FormTodoEdit = FormTodo & {
-  completed: boolean;
+  status: ExcludeAll<FILTER_STATUS_TODO_VALUE>;
   createdAt: number;
 };
