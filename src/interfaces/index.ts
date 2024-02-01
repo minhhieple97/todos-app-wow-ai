@@ -51,14 +51,23 @@ export type State = {
 
 
 export type TodoContextType = State & {
-  todos: Todo[];
   addTodo: (todo: Todo) => void;
   editTodo: (todo: Todo) => void;
   pickTodo: (todo: Todo) => void;
-  deleteTodo: (id: number) => void;
+  deleteTodo: (
+    id: number,
+    status: ExcludeAll<FILTER_STATUS_TODO_VALUE>
+  ) => void;
   cancelUpdate: () => void;
+  moveTodo: (
+    id: number,
+    statusStart: ExcludeAll<FILTER_STATUS_TODO_VALUE>,
+    statusEnd: ExcludeAll<FILTER_STATUS_TODO_VALUE>
+  ) => void;
   filterTodo: (status: FILTER_STATUS_TODO_VALUE) => void;
-  columns:Column[]
+  columns: Column[];
+  columnsData: ColumnsData;
+  setColumnsData: (value: ColumnsData) => void;
 };
 
 export type FormTodo = {

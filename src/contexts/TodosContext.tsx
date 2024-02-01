@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useReducer, useState } from "react";
+import React, { createContext, useReducer } from "react";
 import {
   ActionType,
   ColumnsData,
@@ -16,16 +16,18 @@ import {
 import { useLocalStorageState } from "../hooks";
 import { getColumnsByStatus } from "../utils/helpers";
 const initialValue: TodoContextType = {
-  todos: [],
   addTodo: () => {},
   editTodo: () => {},
   deleteTodo: () => {},
   filterTodo: () => {},
   pickTodo: () => {},
   cancelUpdate: () => {},
+  moveTodo: () => {},
   currentTodo: null,
   statusFilter: FILTER_STATUS_TODO_VALUE.ALL,
   columns: [],
+  columnsData: initialColumnsData,
+  setColumnsData: () => {},
 };
 const TodosContext = createContext<TodoContextType>(initialValue);
 
@@ -45,36 +47,21 @@ const reducer = (state: State, action: TodoAction) => {
 const TodosProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [todos, setTodos] = useLocalStorageState<Todo[]>(
+  const [columnsData, setColumnsData] = useLocalStorageState<ColumnsData>(
     LOCALSTORATE_KEY_TODOS,
-    []
+    initialColumnsData
   );
-
-  const [columnsData, setColumnsData] =
-    useState<ColumnsData>(initialColumnsData);
 
   const [{ currentTodo, statusFilter }, dispatch] = useReducer(
     reducer,
     initialValue
   );
 
-  useEffect(() => {
-    setColumnsData((columnsData) => {
-      const newColumsData = structuredClone(columnsData);
-      const keys = Object.keys(
-        newColumsData
-      ) as ExcludeAll<FILTER_STATUS_TODO_VALUE>[];
-      for (const key of keys) {
-        newColumsData[key].list = todos.filter((todo) => todo.status === key);
-      }
-      return newColumsData;
-    });
-  }, [todos]);
-
   const addTodo = (todo: Todo) => {
-    const newTodos = structuredClone(todos);
-    newTodos.push(todo);
-    setTodos(newTodos);
+    const newColumsData = structuredClone(columnsData);
+    const pendingTodos = newColumsData.pending.list;
+    pendingTodos.push(todo);
+    setColumnsData(newColumsData);
   };
 
   const pickTodo = (todo: Todo) => {
@@ -84,17 +71,44 @@ const TodosProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
-  const deleteTodo = (id: number) => {
-    const newTodos = structuredClone(todos).filter((todo) => todo.id !== id);
-    setTodos(newTodos);
+  const deleteTodo = (
+    id: number,
+    status: ExcludeAll<FILTER_STATUS_TODO_VALUE>
+  ) => {
+    const newColumsData = structuredClone(columnsData);
+    const newTodos = newColumsData[status].list.filter(
+      (todo) => todo.id !== id
+    );
+    newColumsData[status].list = newTodos;
+    setColumnsData(newColumsData);
   };
 
   const editTodo = (todo: Todo) => {
     const id = todo.id;
-    const newTodos = structuredClone(todos);
-    const indexTodo = newTodos.findIndex((todo) => todo.id === id);
-    newTodos[indexTodo] = todo;
-    setTodos(newTodos);
+    const newColumsData = structuredClone(columnsData);
+    const todos = newColumsData[todo.status].list;
+    const indexTodo = todos.findIndex((todo) => todo.id === id);
+    todos[indexTodo] = todo;
+    setColumnsData(newColumsData);
+    dispatch({ type: ActionType.CANCEL_UPDATE });
+  };
+
+  const moveTodo = (
+    id: number,
+    statusStart: ExcludeAll<FILTER_STATUS_TODO_VALUE>,
+    statusEnd: ExcludeAll<FILTER_STATUS_TODO_VALUE>
+  ) => {
+    const newColumsData = structuredClone(columnsData);
+    const todosStart = newColumsData[statusStart].list;
+    const todosEnd = newColumsData[statusEnd].list;
+    const todo = todosStart.find((todo) => todo.id === id)!;
+    todo.status = statusEnd;
+    todosEnd.push(todo);
+    newColumsData[statusStart].list = todosStart.filter(
+      (todo) => todo.id !== id
+    );
+    newColumsData[statusEnd].list = todosEnd;
+    setColumnsData(newColumsData);
     dispatch({ type: ActionType.CANCEL_UPDATE });
   };
 
@@ -108,7 +122,6 @@ const TodosProvider: React.FC<{ children: React.ReactNode }> = ({
   return (
     <TodosContext.Provider
       value={{
-        todos,
         currentTodo,
         addTodo,
         deleteTodo,
@@ -118,6 +131,9 @@ const TodosProvider: React.FC<{ children: React.ReactNode }> = ({
         cancelUpdate,
         statusFilter,
         columns,
+        columnsData,
+        setColumnsData,
+        moveTodo,
       }}
     >
       {children}

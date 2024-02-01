@@ -1,7 +1,7 @@
 import { Draggable } from "react-beautiful-dnd";
-import { useEditTodo, useTodos } from "../../hooks";
+import { useTodos } from "../../hooks";
 import { useDeleteTodo } from "../../hooks/useDeleteTodo";
-import { FormTodoEdit, Todo } from "../../interfaces";
+import { Todo } from "../../interfaces";
 import { formatDate } from "../../utils/helpers";
 import { FILTER_STATUS_TODO_VALUE } from "../../utils/constants";
 type ITaskItem = {
@@ -9,8 +9,7 @@ type ITaskItem = {
   index: number;
 };
 export const TodoItem = ({ todo, index }: ITaskItem) => {
-  const { handleEditTodo } = useEditTodo();
-  const { pickTodo, currentTodo } = useTodos();
+  const { pickTodo, currentTodo, moveTodo } = useTodos();
   const { handleDeleteTodo } = useDeleteTodo();
   const { title, description, dueDate, status } = todo;
   return (
@@ -38,16 +37,10 @@ export const TodoItem = ({ todo, index }: ITaskItem) => {
                   }
                   onChange={(event) => {
                     const completed = event.target.checked;
-                    const todoUpdate: FormTodoEdit = {
-                      ...todo,
-                      status: completed
-                        ? FILTER_STATUS_TODO_VALUE.COMPLETED
-                        : FILTER_STATUS_TODO_VALUE.PENDING,
-                      dueDate: todo.dueDate
-                        ? new Date(todo.dueDate)
-                        : undefined,
-                    };
-                    handleEditTodo(todo.id, todoUpdate);
+                    const status = completed
+                      ? FILTER_STATUS_TODO_VALUE.COMPLETED
+                      : FILTER_STATUS_TODO_VALUE.PENDING;
+                    moveTodo(todo.id, todo.status, status);
                   }}
                   checked={status === FILTER_STATUS_TODO_VALUE.COMPLETED}
                 />
@@ -82,7 +75,7 @@ export const TodoItem = ({ todo, index }: ITaskItem) => {
               </button>
               <button
                 className="bg-red-500 text-white px-2 py-1 rounded mt-2"
-                onClick={() => handleDeleteTodo(todo.id)}
+                onClick={() => handleDeleteTodo(todo.id, todo.status)}
                 disabled={
                   currentTodo && currentTodo.id === todo.id ? true : false
                 }
