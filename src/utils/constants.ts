@@ -17,7 +17,7 @@ export const initialColumnsData: ColumnsData = {
     id:FILTER_STATUS_TODO_VALUE.COMPLETED,
     title: "Completed Tasks",
     notFoundMessage: "No completed tasks.",
-    backgroundColor: "bg-green-500",
+    backgroundColor: "bg-yellow-200",
     list: [],
   },
 };

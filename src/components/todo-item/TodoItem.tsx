@@ -68,7 +68,7 @@ export const TodoItem = ({ todo, index }: ITaskItem) => {
               <Button
                 size="sm"
                 textColor="white"
-                bgColor="blue-500"
+                bgColor="green-500"
                 handleClick={() => pickTodo(todo)}
                 disabled={
                   currentTodo && currentTodo.id === todo.id ? true : false
