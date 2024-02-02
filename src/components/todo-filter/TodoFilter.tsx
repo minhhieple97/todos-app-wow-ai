@@ -1,8 +1,8 @@
-import { useTodos } from "../../hooks";
+import { useTodosContext } from "../../contexts";
 import { FILTER_STATUS_TODO_VALUE } from "../../utils/constants";
 
 export const TodoFilter = () => {
-  const { filterTodo } = useTodos();
+  const { filterTodo } = useTodosContext();
   const allStatus = Object.values(FILTER_STATUS_TODO_VALUE);
   return (
     <select

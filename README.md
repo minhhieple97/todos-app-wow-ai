@@ -1,6 +1,6 @@
 # Todo List Application
 
-This is a simple Todo List application developed for the ability test of Wow AI company. The application allows users to add, edit, and delete tasks. Users can also mark tasks as completed or pending. The application features form validation, task filtering, and local persistence of tasks.
+This is a simple Todo List application developed. The application allows users to add, edit, and delete tasks. Users can also mark tasks as completed or pending. The application features form validation, task filtering, and local persistence of tasks.
 
 ## Features
 

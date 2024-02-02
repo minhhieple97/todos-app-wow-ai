@@ -1,16 +1,16 @@
 import { Draggable } from "react-beautiful-dnd";
-import { useTodos } from "../../hooks";
-import { useDeleteTodo } from "../../hooks/useDeleteTodo";
+import { useDeleteTodo } from "../../hooks";
 import { Todo } from "../../interfaces";
 import { formatDate } from "../../utils/helpers";
 import { FILTER_STATUS_TODO_VALUE } from "../../utils/constants";
 import { Button } from "../../ui";
+import { useTodosContext } from "../../contexts";
 type ITaskItem = {
   todo: Todo;
   index: number;
 };
 export const TodoItem = ({ todo, index }: ITaskItem) => {
-  const { pickTodo, currentTodo, moveTodo } = useTodos();
+  const { pickTodo, currentTodo, moveTodo } = useTodosContext();
   const { handleDeleteTodo } = useDeleteTodo();
   const { title, description, dueDate, status } = todo;
   return (
@@ -68,7 +68,7 @@ export const TodoItem = ({ todo, index }: ITaskItem) => {
               <Button
                 size="sm"
                 textColor="white"
-                bgColor="blue-300"
+                bgColor="blue-500"
                 handleClick={() => pickTodo(todo)}
                 disabled={
                   currentTodo && currentTodo.id === todo.id ? true : false

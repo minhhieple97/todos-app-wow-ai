@@ -1,10 +1,10 @@
 import { DropResult } from "react-beautiful-dnd";
-import { useTodos } from ".";
 import { FILTER_STATUS_TODO_VALUE } from "../utils/constants";
 import { ExcludeAll } from "../interfaces";
+import { useTodosContext } from ".";
 
 export const useDragDrop = () => {
-  const { columnsData, setColumnsData } = useTodos();
+  const { columnsData, setColumnsData } = useTodosContext();
   const handleDrapDrop = (result: DropResult) => {
     const { source, destination, draggableId: todoId } = result;
     if (!source || !destination) return;

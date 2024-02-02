@@ -1,4 +1,3 @@
-// Button.jsx
 import classnames from "classnames";
 export interface ButtonProps {
   size: "sm" | "lg";
@@ -22,7 +21,7 @@ const Button = ({
     <button
       type={type || "button"}
       className={classnames(
-        `bg-${bgColor} text-${textColor} font-bold py-2 px-4 rounded hover:bg-blue-600`,
+        `bg-${bgColor} text-${textColor} font-bold py-2 px-4 rounded`,
         {
           "text-xs": size === "sm",
           "text-xl": size === "lg",

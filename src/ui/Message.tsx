@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 type MessageProps = {
   message: string;
@@ -12,4 +12,4 @@ const Message: React.FC<MessageProps> = ({ message }) => {
   );
 };
 
-export default Message;
+export { Message };

@@ -1,13 +1,12 @@
-import Message from "../../ui/Message";
-import { useAddTodo, useTodos } from "../../hooks";
+import { useAddTodo, useEditTodo } from "../../hooks";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { FormTodo } from "../../interfaces";
 import DatePicker from "react-datepicker";
 import { useEffect } from "react";
-import { useEditTodo } from "../../hooks/useEditTodo";
-import { Button, Label } from "../../ui";
+import { Button, Input, Label, Message, TextArea } from "../../ui";
+import { useTodosContext } from "../../contexts";
 const validationSchema = Yup.object().shape({
   title: Yup.string()
     .required("Title is required")
@@ -16,13 +15,12 @@ const validationSchema = Yup.object().shape({
   description: Yup.string(),
   dueDate: Yup.date(),
 });
-const CreateTodo = () => {
+const CreateUpdateTodo = () => {
   const { handleCreateTodo } = useAddTodo();
   const { handleEditTodo } = useEditTodo();
-  const { currentTodo, cancelUpdate } = useTodos();
+  const { currentTodo, cancelUpdate } = useTodosContext();
   const isEditing = Boolean(currentTodo);
   const {
-    register,
     handleSubmit,
     reset,
     control,
@@ -53,24 +51,35 @@ const CreateTodo = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-2">
         <Label htmlFor="title">Title</Label>
-        <input
-          className="w-full px-2 py-1 mb-1.5 border border-gray-300 rounded"
-          type="text"
-          id="title"
-          {...register("title")}
+        <Controller
+          name="title"
+          control={control}
+          defaultValue=""
+          render={({ field }) => (
+            <Input
+              placeholder="Enter your task title"
+              value={field.value}
+              onChange={field.onChange}
+            />
+          )}
         />
         {errors.title?.message && (
-          <Message message={errors.title.message}></Message>
+          <div className="mt-2">
+            <Message message={errors.title.message}></Message>
+          </div>
         )}
       </div>
 
       <div className="mb-2">
         <Label htmlFor="description">Description</Label>
-        <textarea
-          className="w-full px-2 py-1 border border-gray-300 rounded"
-          id="description"
-          {...register("description")}
-        ></textarea>
+        <Controller
+          name="description"
+          control={control}
+          defaultValue=""
+          render={({ field }) => (
+            <TextArea value={field.value} onChange={field.onChange} />
+          )}
+        />
       </div>
 
       <div className="mb-2">
@@ -115,4 +124,4 @@ const CreateTodo = () => {
   );
 };
 
-export { CreateTodo };
+export { CreateUpdateTodo };

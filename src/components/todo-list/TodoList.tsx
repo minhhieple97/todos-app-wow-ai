@@ -1,8 +1,9 @@
-import { useDragDrop, useTodos } from "../../hooks";
+import { useDragDrop } from "../../hooks";
+import { useTodosContext } from "../../contexts";
 import { TodoItem } from "../todo-item";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 export const TodoList = () => {
-  const { columns } = useTodos();
+  const { columns } = useTodosContext();
   const { handleDrapDrop } = useDragDrop();
   return (
     <DragDropContext onDragEnd={handleDrapDrop}>

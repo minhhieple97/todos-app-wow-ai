@@ -1,14 +1,10 @@
-import { ColumnsData } from "./../interfaces/index";
+import { ColumnsData } from "./../interfaces";
 export const LOCALSTORATE_KEY_TODOS = 'todos';
 export enum FILTER_STATUS_TODO_VALUE {
   ALL = "all",
   COMPLETED = "completed",
   PENDING = "pending",
 }
-export const ItemTypes = {
-  TODO: "todo",
-};
-
 export const initialColumnsData: ColumnsData = {
   [FILTER_STATUS_TODO_VALUE.PENDING]: {
     id:FILTER_STATUS_TODO_VALUE.PENDING,
