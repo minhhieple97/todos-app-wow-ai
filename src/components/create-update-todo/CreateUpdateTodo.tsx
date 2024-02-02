@@ -32,10 +32,11 @@ const CreateUpdateTodo = () => {
   useEffect(() => {
     if (!currentTodo) return;
     const { title, description, dueDate } = currentTodo;
+    reset();
     setValue("title", title);
     setValue("description", description);
     dueDate && setValue("dueDate", new Date(dueDate));
-  }, [currentTodo, setValue]);
+  }, [currentTodo, reset, setValue]);
   const onSubmit = (data: FormTodo) => {
     if (isEditing && currentTodo) {
       const { status, createdAt } = currentTodo;
@@ -103,7 +104,7 @@ const CreateUpdateTodo = () => {
         />
       </div>
       <div className="flex justify-between">
-        <Button size="lg" textColor="white" bgColor="blue-500" type="submit">
+        <Button size="lg" textColor="white" bgColor="green-500" type="submit">
           {isEditing ? "Update todo" : "Add Todo"}
         </Button>
         {isEditing && (
