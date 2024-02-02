@@ -25,6 +25,7 @@ const Button = ({
         {
           "text-xs": size === "sm",
           "text-xl": size === "lg",
+          green: "bg-green-500",
         }
       )}
       onClick={() => handleClick?.()}
